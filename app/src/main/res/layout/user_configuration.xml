@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="nl.tudelft.cs4160.trustchain_android.main.UserConfigurationActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="nl.tudelft.cs4160.trustchain_android.main.DetailActivity"
+        tools:showIn="@layout/activity_detail"
+        android:clickable="true"
+        android:focusableInTouchMode="true">
+
+        <TableLayout
+            android:id="@+id/overviewButtons"
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin">
+
+            <TableRow>
+
+                <TextView
+                    android:layout_weight="1"
+                    android:text="Enter a username: " />
+
+                <EditText
+                    android:id="@+id/username"
+                    android:layout_weight="1"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"/>
+
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:id="@+id/confirm_button"
+                    android:layout_weight="1"
+                    android:text="Confirm" />
+
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                android:id="@+id/user_notification"
+                android:layout_weight="1" />
+
+            </TableRow>
+
+        </TableLayout>
+
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

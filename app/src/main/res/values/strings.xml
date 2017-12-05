@@ -35,7 +35,7 @@
     <!-- Menu -->
     <string name="menu_item_1">My Chain</string>
     <string name="menu_item_2">Details</string>
-    <string name="menu_item_3">Switch</string>
+    <string name="menu_item_3">User</string>
 
     <!--- app to app strings -->
     <string name="start_connection">Attempt connection</string>
@@ -60,4 +60,5 @@
     <string name="active_peers">Active\nPeers</string>
     <string name="exit_prompt">Exit</string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="title_activity_user">UserActivity</string>
 </resources>

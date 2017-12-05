@@ -52,7 +52,7 @@ public class PeerListAdapter extends ArrayAdapter<PeerAppToApp> {
 
         PeerAppToApp peer = getItem(position);
 
-        holder.mPeerId.setText(peer.getPeerId() == null ? "" : peer.getPeerId().substring(0, 4));
+        holder.mPeerId.setText(peer.getPeerId() == null ? "" : peer.getPeerId());
         if (peer.getNetworkOperator() != null) {
             if (peer.getConnectionType() == ConnectivityManager.TYPE_MOBILE) {
                 holder.mCarrier.setText(peer.getNetworkOperator());

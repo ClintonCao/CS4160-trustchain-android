@@ -139,11 +139,13 @@ public class OverviewConnectionsActivity extends AppCompatActivity {
         } else {
             peerList = new PeerList();
         }
-        hashId = getId();
-        ((TextView) findViewById(R.id.peer_id)).setText(hashId.toString().substring(0, 4));
         wanVote = new WanVote();
         outBuffer = ByteBuffer.allocate(BUFFER_SIZE);
         mWanVote = (TextView) findViewById(R.id.wanvote);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        hashId = preferences.getString(HASH_ID, null);
+        ((TextView) findViewById(R.id.peer_id)).setText(hashId);
     }
 
 
@@ -175,7 +177,7 @@ public class OverviewConnectionsActivity extends AppCompatActivity {
      */
     private void addInitialPeer() {
         try {
-            addPeer(null, new InetSocketAddress(InetAddress.getByName(CONNECTABLE_ADDRESS), DEFAULT_PORT), PeerAppToApp.OUTGOING);
+            addPeer(null, new InetSocketAddress(InetAddress.getByName(CONNECTABLE_ADDRESS), DEFAULT_PORT), "", PeerAppToApp.OUTGOING);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -397,7 +399,7 @@ public class OverviewConnectionsActivity extends AppCompatActivity {
                 return peer;
             }
         }
-        return addPeer(id, address, incoming);
+        return addPeer(id, address, "", incoming);
     }
 
 
@@ -574,7 +576,7 @@ public class OverviewConnectionsActivity extends AppCompatActivity {
      * @param incoming whether the peerAppToApp is an incoming peerAppToApp.
      * @return the added peerAppToApp.
      */
-    private synchronized PeerAppToApp addPeer(String peerId, InetSocketAddress address, boolean incoming) {
+    private synchronized PeerAppToApp addPeer(String peerId, InetSocketAddress address, String username, boolean incoming) {
         if (hashId.equals(peerId)) {
             System.out.println("Not adding self");
             PeerAppToApp self = null;

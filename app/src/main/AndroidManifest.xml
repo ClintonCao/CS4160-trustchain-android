@@ -33,6 +33,17 @@
             android:name=".main.OverviewConnectionsActivity"
             android:configChanges="orientation|screenLayout|screenSize">
 
+
+        </activity>
+        <activity
+        android:name=".main.DetailActivity"
+        android:label="@string/title_activity_detail"
+        android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".main.UserConfigurationActivity"
+            android:label="@string/title_activity_user"
+            android:theme="@style/AppTheme.NoActionBar">
+
             <!-- android:screenOrientation="portrait"> -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,10 +51,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".main.DetailActivity"
-            android:label="@string/title_activity_detail"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
