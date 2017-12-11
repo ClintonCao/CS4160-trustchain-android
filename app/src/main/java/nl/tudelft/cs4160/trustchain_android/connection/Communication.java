@@ -17,7 +17,7 @@ import nl.tudelft.cs4160.trustchain_android.block.TrustChainBlock;
 import nl.tudelft.cs4160.trustchain_android.block.ValidationResult;
 import nl.tudelft.cs4160.trustchain_android.connection.network.NetworkCommunication;
 import nl.tudelft.cs4160.trustchain_android.database.TrustChainDBHelper;
-import nl.tudelft.cs4160.trustchain_android.main.MainActivity;
+import nl.tudelft.cs4160.trustchain_android.main.TrustChainActivity;
 import nl.tudelft.cs4160.trustchain_android.message.MessageProto;
 
 import static nl.tudelft.cs4160.trustchain_android.Peer.bytesToHex;
@@ -395,7 +395,7 @@ public abstract class Communication {
             peer.setPublicKey(getPublicKey(identifier));
             sendLatestBlocksToPeer(peer);
             try {
-                signBlock(MainActivity.TRANSACTION.getBytes("UTF-8"), peer);
+                signBlock(TrustChainActivity.TRANSACTION.getBytes("UTF-8"), peer);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
