@@ -76,9 +76,9 @@ public class TrustChainActivity extends AppCompatActivity implements Communicati
      */
 
     public void onClickConnect(View view) {
-        Peer p = new Peer(null, editTextDestinationIP.getText().toString(),
+        peer = new Peer(null, editTextDestinationIP.getText().toString(),
                 Integer.parseInt(editTextDestinationPort.getText().toString()));
-        communication.connectToPeer(p);
+        communication.connectToPeer(peer);
     }
 
     public void onClickReset(View view) {
@@ -96,18 +96,16 @@ public class TrustChainActivity extends AppCompatActivity implements Communicati
         setContentView(R.layout.activity_main);
         initVariables();
         init();
-        connectToPeer();
+        setPeerDetails();
     }
 
-    private void connectToPeer() {
+    private void setPeerDetails() {
         peerAppToApp = (PeerAppToApp) getIntent().getSerializableExtra("PeerAppToApp");
         if(peerAppToApp != null) {
             String address = peerAppToApp.getExternalAddress().toString().substring(1);
             int port = peerAppToApp.getPort();
             editTextDestinationIP.setText(address);
             editTextDestinationPort.setText(port + "");
-            peer = new Peer(null, address, port);
-            communication.connectToPeer(peer);
         }
     }
 
