@@ -383,9 +383,9 @@ public abstract class Communication {
      * If the peer is not known, this will send a crawl request, otherwise a half block.
      * @param peer
      */
-    public void connectToPeer(Peer peer) {
+    public void connectToPeer(Peer peer, boolean newConnection) {
         String identifier = peer.getIpAddress();
-        if(peer.getDevice() != null) {
+        if(peer.getDevice() != null || newConnection) {
             identifier = peer.getDevice().getAddress();
         }
         Log.e(TAG, "Identifier: " + identifier);

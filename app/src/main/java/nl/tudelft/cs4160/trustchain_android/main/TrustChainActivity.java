@@ -50,7 +50,7 @@ public class TrustChainActivity extends AppCompatActivity implements Communicati
 
     TrustChainActivity thisActivity;
     PeerAppToApp peerAppToApp;
-   // Peer peer;
+    Peer peer;
 
     private Communication communication;
 
@@ -96,7 +96,7 @@ public class TrustChainActivity extends AppCompatActivity implements Communicati
         setContentView(R.layout.activity_main);
         initVariables();
         init();
-        //connectToPeer();
+        connectToPeer();
     }
 
     private void connectToPeer() {
@@ -106,8 +106,8 @@ public class TrustChainActivity extends AppCompatActivity implements Communicati
             int port = peerAppToApp.getPort();
             editTextDestinationIP.setText(address);
             editTextDestinationPort.setText(port + "");
-           // peer = new Peer(null, address, port);
-           // communication.connectToPeer(peer);
+            peer = new Peer(null, address, port);
+            communication.connectToPeer(peer);
         }
     }
 
