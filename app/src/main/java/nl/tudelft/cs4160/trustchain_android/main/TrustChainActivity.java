@@ -219,7 +219,6 @@ public class TrustChainActivity extends AppCompatActivity implements Communicati
         return null;
     }
 
-
     @Override
     public void updateLog(final String msg) {
         //just to be sure run it on the ui thread

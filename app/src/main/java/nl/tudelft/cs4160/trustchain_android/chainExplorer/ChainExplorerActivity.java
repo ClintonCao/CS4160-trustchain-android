@@ -41,7 +41,7 @@ public class ChainExplorerActivity extends AppCompatActivity {
         dbHelper = new TrustChainDBHelper(this);
         KeyPair kp = Key.loadKeys(getApplicationContext());
         try {
-            adapter = new ChainExplorerAdapter(this, dbHelper.getAllBlocks(), kp.getPublic().getEncoded());
+            adapter = new ChainExplorerAdapter(this, dbHelper.getAllBlocks(), Key.getQ(kp.getPublic()));
             blocksList.setAdapter(adapter);
         } catch (Exception e) {
             e.printStackTrace();

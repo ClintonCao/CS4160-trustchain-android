@@ -5,6 +5,8 @@ import android.util.Base64;
 
 import com.google.protobuf.ByteString;
 
+import org.spongycastle.jce.interfaces.ECPublicKey;
+
 import java.security.KeyPair;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -37,7 +39,7 @@ public class TrustChainBlock {
     public static MessageProto.TrustChainBlock createGenesisBlock(KeyPair kp) {
         MessageProto.TrustChainBlock block = MessageProto.TrustChainBlock.newBuilder()
                 .setTransaction(ByteString.EMPTY)
-                .setPublicKey(ByteString.copyFrom(kp.getPublic().getEncoded()))
+                .setPublicKey(ByteString.copyFrom(Key.getQ(kp.getPublic())))
                 .setSequenceNumber(GENESIS_SEQ)
                 .setLinkPublicKey(EMPTY_PK)
                 .setLinkSequenceNumber(UNKNOWN_SEQ)
@@ -218,9 +220,7 @@ public class TrustChainBlock {
             errors.add("Link sequence number not empty and is prior to genesis");
         }
 
-        //TODO: resolve stupid conversions byte[] => Base64 => byte[]
-        String key = Base64.encodeToString(block.getPublicKey().toByteArray(), Base64.DEFAULT);
-        PublicKey publicKey = Key.loadPublicKey(key);
+        PublicKey publicKey = Key.loadCurve25519FromQ(block.getPublicKey().toByteArray());
         if(publicKey == null) {
             result.setInvalid();
             errors.add("Public key is not valid");
@@ -237,7 +237,7 @@ public class TrustChainBlock {
         // If a block is linked with a block of the same owner it does not serve any purpose and is invalid.
         if(block.getPublicKey().equals(block.getLinkPublicKey())) {
             result.setInvalid();
-            errors.add("Self linked block");
+            errors.add("Self linked block" + bytesToHex(block.getLinkPublicKey().toByteArray()) + "\n" + bytesToHex(block.getPublicKey().toByteArray()));
         }
         // If it is implied that block is a genesis block, check if it correctly set up
         if(isGenesisBlock(block)){

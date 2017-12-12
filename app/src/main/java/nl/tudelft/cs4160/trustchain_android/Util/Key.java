@@ -7,9 +7,16 @@ import android.util.Log;
 import org.spongycastle.asn1.x9.X9ECParameters;
 import org.spongycastle.crypto.ec.CustomNamedCurves;
 import org.spongycastle.jce.ECNamedCurveTable;
+import org.spongycastle.jce.interfaces.ECPublicKey;
 import org.spongycastle.jce.provider.BouncyCastleProvider;
 import org.spongycastle.jce.spec.ECParameterSpec;
+import org.spongycastle.jce.spec.ECPublicKeySpec;
+import org.spongycastle.math.ec.ECPoint;
+import org.spongycastle.math.ec.custom.djb.*;
+import org.spongycastle.math.ec.custom.djb.Curve25519;
+import org.spongycastle.util.encoders.Hex;
 
+import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -26,6 +33,8 @@ import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+
+import nl.tudelft.cs4160.trustchain_android.Peer;
 
 /**
  * Manages key operations.
@@ -160,25 +169,24 @@ public class Key {
         if(key == null) {
             return null;
         }
-        Log.i(TAG, "PUBLIC FROM FILE: " + key);
-        return loadPublicKey(key);
+        Log.i(TAG, "Loaded public key from file: " + key);
+        byte[] rawKey = Base64.decode(key, Base64.DEFAULT);
+        return loadX509PublicKey(rawKey);
     }
 
 
     /**
-     * Load a raw base64 encoded key.
-     * @param key The base64 encoded key.
+     * Create a PublicKey from a raw X509 byte encoded key.
+     * @param key The byte encoded key.
      * @return Public key
      */
-    public static PublicKey loadPublicKey(String key) {
+    public static PublicKey loadX509PublicKey(byte[] key) {
         KeyFactory kf = getKeyFactory();
         if(kf == null) {
             return null;
         }
 
-        byte[] rawKey = Base64.decode(key, Base64.DEFAULT);
-        X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(rawKey);
-
+        X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(key);
         try {
             return kf.generatePublic(pubKeySpec);
         } catch (InvalidKeySpecException e) {
@@ -198,23 +206,22 @@ public class Key {
         if(key == null) {
             return null;
         }
-        Log.i(TAG, "PRIVATE FROM FILE: " + key);
-        return loadPrivateKey(key);
+        Log.i(TAG, "Loaded private key from file: " + key);
+        byte[] rawKey = Base64.decode(key, Base64.DEFAULT);
+        return loadPrivateKey(rawKey);
     }
 
     /**
-     * Load a private key from a base64 encoded string
-     * @param key The base64 encoded key
+     * Create a PrivateKey from a PKCS8 encoded key
+     * @param key The byte encoded key
      * @return The private key
      */
-    public static PrivateKey loadPrivateKey(String key) {
+    public static PrivateKey loadPrivateKey(byte[] key) {
         KeyFactory kf = getKeyFactory();
         if(kf == null) {
             return null;
         }
-
-        byte[] rawKey = Base64.decode(key, Base64.DEFAULT);
-        PKCS8EncodedKeySpec ks = new PKCS8EncodedKeySpec(rawKey);
+        PKCS8EncodedKeySpec ks = new PKCS8EncodedKeySpec(key);
         try {
             return kf.generatePrivate(ks);
         } catch (InvalidKeySpecException e) {
@@ -246,6 +253,35 @@ public class Key {
      */
     public static boolean saveKey(Context context, String file, java.security.Key key) {
         return Util.writeToFile(context, file, Base64.encodeToString(key.getEncoded(), Base64.DEFAULT));
+    }
+
+    /**
+     * Load a public key from the point Q
+     * @param rawQ The byte[] encoded Q
+     * @return Public key
+     */
+    public static PublicKey loadCurve25519FromQ(byte[] rawQ) {
+        ECParameterSpec ecSpec = getParameterSpec("curve25519", true);
+        ECPublicKeySpec pubKeySpec = new ECPublicKeySpec(ecSpec.getCurve().decodePoint(rawQ), ecSpec);
+        KeyFactory kf = getKeyFactory();
+        try {
+            return kf.generatePublic(pubKeySpec);
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+    /**
+     * Get point Q from an Elliptic Curve public key
+     * @param pk The public key
+     * @return Byte array encoded point Q
+     */
+    public static byte[] getQ(PublicKey pk) {
+        if(pk instanceof ECPublicKey)
+            return ((ECPublicKey)pk).getQ().getEncoded(false);
+        throw new RuntimeException("No elliptic curve public key is provided");
     }
 
 
