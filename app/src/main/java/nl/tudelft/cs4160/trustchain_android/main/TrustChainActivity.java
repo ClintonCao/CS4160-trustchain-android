@@ -76,9 +76,9 @@ public class TrustChainActivity extends AppCompatActivity implements Communicati
      */
 
     public void onClickConnect(View view) {
-        peer = new Peer(null, editTextDestinationIP.getText().toString(),
+        Peer p = new Peer(null, editTextDestinationIP.getText().toString(),
                 Integer.parseInt(editTextDestinationPort.getText().toString()));
-        communication.connectToPeer(peer);
+        communication.connectToPeer(p);
     }
 
     public void onClickReset(View view) {
