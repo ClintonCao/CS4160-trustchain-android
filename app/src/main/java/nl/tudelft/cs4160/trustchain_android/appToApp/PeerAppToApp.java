@@ -16,6 +16,7 @@ public class PeerAppToApp implements Serializable {
     public final static boolean OUTGOING = false;
 
     final private static int TIMEOUT = 20000;
+    final private static int INACTIVE = 5 * TIMEOUT;
     private InetSocketAddress address;
     private String peerId;
     private boolean hasReceivedData = false;
@@ -123,6 +124,15 @@ public class PeerAppToApp implements Serializable {
         return true;
     }
 
+    /**
+     * Check whether this peer has been inactive for a while: the peer is inactive for a while if the user have not
+     * received anything from the peer for some time.
+     * @return
+     */
+    public boolean isLongInactive() {
+        return System.currentTimeMillis() - lastReceiveTime > INACTIVE;
+    }
+
     @Override
     public String toString() {
         return "Peer{" +
@@ -159,4 +169,5 @@ public class PeerAppToApp implements Serializable {
     public long getLastReceiveTime() {
         return lastReceiveTime;
     }
+
 }
