@@ -78,7 +78,7 @@ public class InboxActivity extends AppCompatActivity implements CommunicationLis
     }
 
     @Override
-    public void requestPermission(MessageProto.TrustChainBlock block, Peer peer) {
+    public void requestPermission(MessageProto.TrustChainBlock block) {
 
     }
 

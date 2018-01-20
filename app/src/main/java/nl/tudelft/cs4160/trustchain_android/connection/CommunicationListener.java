@@ -10,6 +10,6 @@ import nl.tudelft.cs4160.trustchain_android.message.MessageProto;
 public interface CommunicationListener {
 
     void updateLog(String msg);
-    void requestPermission(MessageProto.TrustChainBlock block, Peer peer);
+    void requestPermission(MessageProto.TrustChainBlock block);
     void connectionSuccessful(byte[] publicKey);
 }

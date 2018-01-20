@@ -511,7 +511,7 @@ public class OverviewConnectionsActivity extends AppCompatActivity implements Ne
     }
 
     @Override
-    public void requestPermission(final MessageProto.TrustChainBlock block, final Peer peer) {
+    public void requestPermission(final MessageProto.TrustChainBlock block) {
 
     }
 

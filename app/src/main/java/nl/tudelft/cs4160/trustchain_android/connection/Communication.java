@@ -412,7 +412,7 @@ public abstract class Communication {
             // signBlock(peer, block);
 
             if(listener != null) {
-                listener.requestPermission(block, peer);
+                listener.requestPermission(block);
             }
         }
     }
@@ -421,17 +421,7 @@ public abstract class Communication {
     /**
      * Connect with a peer, either unknown or known.
      * If the peer is not known, this will send a crawl request, otherwise a half block.
-<<<<<<< HEAD
-     *
      * @param peer - The peer that we want to connect to
-=======
-<<<<<<< HEAD
-     *
-     * @param peer
-=======
-     * @param peer - The peer that we want to connect to
->>>>>>> develop
->>>>>>> develop
      */
     public void connectToPeer(Peer peer) {
         String identifier = peer.getIpAddress();

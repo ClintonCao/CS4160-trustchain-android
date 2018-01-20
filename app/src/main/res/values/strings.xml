@@ -33,6 +33,7 @@
     <string name="item_prev_hash">Previous hash:</string>
     <string name="item_signature">Signature:</string>
     <string name="item_transaction">Transaction:</string>
+    <string name="sign_block">Sign this block</string>
 
     <string name="bluetooth_explanation">First pair with a device via the Android bluetooth manager. After the two devices are paired press on the desired device to initiate a connection.</string>
     <string name="bluetooth_button">Bluetooth</string>

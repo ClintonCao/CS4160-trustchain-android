@@ -174,6 +174,7 @@ public class TrustChainActivity extends AppCompatActivity implements CompoundBut
         this.context = this;
         inboxItemOtherPeer = (InboxItem) getIntent().getSerializableExtra("inboxItem");
         InboxItemStorage.markHalfBlockAsRead(this,inboxItemOtherPeer);
+        peer = new Peer(inboxItemOtherPeer.getPublicKey().getBytes(),inboxItemOtherPeer.getAddress(),inboxItemOtherPeer.getPort());
         setContentView(R.layout.activity_main);
         initVariables();
         init();
@@ -213,12 +214,12 @@ public class TrustChainActivity extends AppCompatActivity implements CompoundBut
                 }
 
                 if (validationResultStatus != ValidationResult.VALID) {
-                    blockStatus += "Not signed by both parties";
+                    blockStatus += "Awaiting your signing";
                 } else {
-                    blockStatus += "Signed by both parties";
+                    blockStatus += "Signed";
                 }
 
-                mutualBlocks.add(new MutualBlockItem(inboxItemOtherPeer.getUserName(), block.getSequenceNumber(), block.getLinkSequenceNumber(), blockStatus, block.getTransaction().toStringUtf8()));
+                mutualBlocks.add(new MutualBlockItem(inboxItemOtherPeer.getUserName(), block.getSequenceNumber(), block.getLinkSequenceNumber(), blockStatus, block.getTransaction().toStringUtf8(), block));
             }
         }
         return mutualBlocks;
@@ -359,7 +360,7 @@ public class TrustChainActivity extends AppCompatActivity implements CompoundBut
     }
 
     @Override
-    public void requestPermission(final MessageProto.TrustChainBlock block, final Peer peer) {
+    public void requestPermission(final MessageProto.TrustChainBlock block) {
         //just to be sure run it on the ui thread
         //this is not necessary when this function is called from a AsyncTask
         final TrustChainActivity trustChainActivity = this;
@@ -373,10 +374,10 @@ public class TrustChainActivity extends AppCompatActivity implements CompoundBut
                     builder = new AlertDialog.Builder(context);
                 }
                 try {
-                    builder.setMessage("Do you want to sign Block[ " + block.getTransaction().toString("UTF-8") + " ] from " + peer.getName() + "?")
+                    builder.setMessage("Do you want to sign Block[ " + block.getTransaction().toString("UTF-8") + " ] from " + inboxItemOtherPeer.getUserName() + "?")
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    //CommunicationSingleton.getCommunication().acceptTransaction(block, peer);
+                                    CommunicationSingleton.getCommunication().acceptTransaction(block, peer);
                                 }
                             })
                             .setNegativeButton("No", new DialogInterface.OnClickListener() {

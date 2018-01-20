@@ -8,11 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Button;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
+import nl.tudelft.cs4160.trustchain_android.Peer;
 import nl.tudelft.cs4160.trustchain_android.R;
 import nl.tudelft.cs4160.trustchain_android.SharedPreferences.UserNameStorage;
 
@@ -57,8 +59,18 @@ public class MutualBlockAdapter extends RecyclerView.Adapter<MutualBlockAdapter.
     public void onBindViewHolder(MutualBlockAdapter.ViewHolder viewHolder, int position) {
         MutualBlockItem mutualBlockItem = mutualBlocks.get(position);
         if (mutualBlockItem != null) {
-            TextView blockStatTv = viewHolder.blockStatTextView;
-            blockStatTv.setText(mutualBlockItem.getBlockStatus());
+            Button signButton = viewHolder.signButton;
+            if (mutualBlockItem.getBlockStatus() == "Signed"){
+                TextView blockStatTv = viewHolder.blockStatTextView;
+                blockStatTv.setBackgroundColor(0xFF00FF00); // set background color green
+                blockStatTv.setText(mutualBlockItem.getBlockStatus());
+                signButton.setVisibility(View.GONE);
+            } else {
+                TextView blockStatTv = viewHolder.blockStatTextView;
+                blockStatTv.setText(mutualBlockItem.getBlockStatus());
+                setOnClickListenerSignBlock(viewHolder, position);
+
+            }
             TextView userNameTv = viewHolder.userNameTextView;
             userNameTv.setText(UserNameStorage.getUserName(context));
             TextView peerNameTv = viewHolder.peerNameTextView;
@@ -71,6 +83,23 @@ public class MutualBlockAdapter extends RecyclerView.Adapter<MutualBlockAdapter.
             transTv.setText(mutualBlockItem.getTransaction());
         }
     }
+
+    /**
+     * Define the listener on the button for the unsigned blocks and invoke the method of signing blocks
+     * @param holder The viewholder for this adapter.
+     */
+    private void setOnClickListenerSignBlock(final MutualBlockAdapter.ViewHolder holder, final int position) {
+        View.OnClickListener mOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String peerName = mutualBlocks.get(position).getPeerName();
+                TrustChainActivity trustChainActivity = (TrustChainActivity) context;
+                trustChainActivity.requestPermission(mutualBlocks.get(position).getBlock());
+                }
+        };
+        holder.signButton.setOnClickListener(mOnClickListener);
+    }
+
 
     @Override
     public int getItemCount() {
@@ -88,6 +117,7 @@ public class MutualBlockAdapter extends RecyclerView.Adapter<MutualBlockAdapter.
         TextView seqNumTextView;
         TextView linkSeqNumTextView;
         TextView transactionTextView;
+        Button signButton;
 
         /**
          * Constructor.
@@ -101,6 +131,7 @@ public class MutualBlockAdapter extends RecyclerView.Adapter<MutualBlockAdapter.
             seqNumTextView = (TextView) itemView.findViewById(R.id.sequenceNumberMutualBlock);
             linkSeqNumTextView = (TextView) itemView.findViewById(R.id.linkSeqNumMutualBlock);
             transactionTextView = (TextView) itemView.findViewById(R.id.transactionMutualBlock);
+            signButton = (Button) itemView.findViewById(R.id.sign_button);
         }
     }
 
