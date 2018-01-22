@@ -32,7 +32,6 @@ import java.net.NetworkInterface;
 import java.nio.channels.DatagramChannel;
 import java.security.PublicKey;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -65,6 +64,8 @@ import nl.tudelft.cs4160.trustchain_android.chainExplorer.ChainExplorerActivity;
 import nl.tudelft.cs4160.trustchain_android.database.TrustChainDBHelper;
 import nl.tudelft.cs4160.trustchain_android.inbox.InboxItem;
 import nl.tudelft.cs4160.trustchain_android.message.MessageProto;
+import nl.tudelft.cs4160.trustchain_android.mutualBlock.MutualBlockAdapter;
+import nl.tudelft.cs4160.trustchain_android.mutualBlock.MutualBlockItem;
 
 import static nl.tudelft.cs4160.trustchain_android.block.TrustChainBlock.createBlock;
 

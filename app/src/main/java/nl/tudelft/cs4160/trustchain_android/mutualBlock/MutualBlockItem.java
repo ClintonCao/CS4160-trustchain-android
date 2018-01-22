@@ -1,4 +1,4 @@
-package nl.tudelft.cs4160.trustchain_android.main;
+package nl.tudelft.cs4160.trustchain_android.mutualBlock;
 
 /**
  * Class that is used to define a MutualBlock in the recycler view.

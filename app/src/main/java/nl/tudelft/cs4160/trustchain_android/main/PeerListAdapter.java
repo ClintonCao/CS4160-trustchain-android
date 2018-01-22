@@ -1,11 +1,11 @@
 package nl.tudelft.cs4160.trustchain_android.main;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
+
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +19,6 @@ import java.util.List;
 import nl.tudelft.cs4160.trustchain_android.R;
 import nl.tudelft.cs4160.trustchain_android.SharedPreferences.InboxItemStorage;
 import nl.tudelft.cs4160.trustchain_android.SharedPreferences.PubKeyAndAddressPairStorage;
-import nl.tudelft.cs4160.trustchain_android.SharedPreferences.SharedPreferencesStorage;
-import nl.tudelft.cs4160.trustchain_android.Util.ByteArrayConverter;
 import nl.tudelft.cs4160.trustchain_android.appToApp.PeerAppToApp;
 import nl.tudelft.cs4160.trustchain_android.inbox.InboxItem;
 
@@ -60,49 +58,57 @@ public class PeerListAdapter extends ArrayAdapter<PeerAppToApp> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        PeerAppToApp peer = getItem(position);
+        if (position < getCount() && position >= 0) {
+            PeerAppToApp peer = getItem(position);
 
-        holder.mPeerId.setText(peer.getPeerId() == null ? "" : peer.getPeerId());
-        if (peer.getNetworkOperator() != null) {
-            if (peer.getConnectionType() == ConnectivityManager.TYPE_MOBILE) {
-                holder.mCarrier.setText(peer.getNetworkOperator());
-            } else {
-
-                if (peer.getExternalAddress().getHostAddress().toString().equals(OverviewConnectionsActivity.CONNECTABLE_ADDRESS)) {
-                    holder.mCarrier.setText("Server");
+            holder.mPeerId.setText(peer.getPeerId() == null ? "" : peer.getPeerId());
+            if (peer.getNetworkOperator() != null) {
+                if (peer.getConnectionType() == ConnectivityManager.TYPE_MOBILE) {
+                    holder.mCarrier.setText(peer.getNetworkOperator());
                 } else {
-                    holder.mCarrier.setText(connectionTypeString(peer.getConnectionType()));
+
+                    if (peer.getExternalAddress().getHostAddress().toString().equals(OverviewConnectionsActivity.CONNECTABLE_ADDRESS)) {
+                        holder.mCarrier.setText("Server");
+                    } else {
+                        holder.mCarrier.setText(connectionTypeString(peer.getConnectionType()));
+                    }
+                }
+            } else {
+                holder.mCarrier.setText("");
+            }
+            if (peer.hasReceivedData()) {
+                if (peer.isAlive()) {
+                    holder.mStatusIndicator.setTextColor(context.getResources().getColor(R.color.colorStatusConnected));
+                } else {
+                    holder.mStatusIndicator.setTextColor(context.getResources().getColor(R.color.colorStatusCantConnect));
+                    if (peer.isLongInactive()) {
+                        remove(peer);
+                    }
+                }
+            } else {
+                if (peer.isAlive()) {
+                    holder.mStatusIndicator.setTextColor(context.getResources().getColor(R.color.colorStatusConnecting));
+                } else {
+                    holder.mStatusIndicator.setTextColor(context.getResources().getColor(R.color.colorStatusCantConnect));
+                    if (peer.isLongInactive()) {
+                        remove(peer);
+                    }
                 }
             }
-        } else {
-            holder.mCarrier.setText("");
-        }
-        if (peer.hasReceivedData()) {
-            if (peer.isAlive()) {
-                holder.mStatusIndicator.setTextColor(context.getResources().getColor(R.color.colorStatusConnected));
-            } else {
-                holder.mStatusIndicator.setTextColor(context.getResources().getColor(R.color.colorStatusCantConnect));
-            }
-        } else {
-            if (peer.isAlive()) {
-                holder.mStatusIndicator.setTextColor(context.getResources().getColor(R.color.colorStatusConnecting));
-            } else {
-                holder.mStatusIndicator.setTextColor(context.getResources().getColor(R.color.colorStatusCantConnect));
-            }
-        }
 
         if (peer.getExternalAddress() != null) {
             holder.mDestinationAddress.setText(String.format("%s:%d", peer.getExternalAddress().toString().substring(1), peer.getPort()));
         }
+            if (System.currentTimeMillis() - peer.getLastSendTime() < 200) {
+                animate(holder.mSentIndicator);
+            }
+            if (System.currentTimeMillis() - peer.getLastReceiveTime() < 200) {
+                animate(holder.mReceivedIndicator);
+            }
+            setOnClickListener(holder.mTableLayoutConnection, position);
 
-        if (System.currentTimeMillis() - peer.getLastSendTime() < 200) {
-            animate(holder.mSentIndicator);
+            return convertView;
         }
-        if (System.currentTimeMillis() - peer.getLastReceiveTime() < 200) {
-            animate(holder.mReceivedIndicator);
-        }
-        setOnClickListener(holder.mTableLayoutConnection, position);
-
         return convertView;
     }
 
